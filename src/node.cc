@@ -1463,6 +1463,14 @@ Local<Value> MakeCallback(Isolate* isolate,
       MakeCallback(env, recv.As<Value>(), callback, argc, argv));
 }
 
+CallbackScope::CallbackScope(Isolate* isolate): isolate_(isolate) {
+}
+
+CallbackScope::~CallbackScope() {
+  Environment* env = Environment::GetCurrent(isolate_);
+  Environment::AsyncCallbackScope callback_scope(env);
+  env->KickNextTick(&callback_scope);
+}
 
 enum encoding ParseEncoding(const char* encoding,
                             enum encoding default_encoding) {

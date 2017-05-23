@@ -62,6 +62,7 @@
 
 #include "v8.h"  // NOLINT(build/include_order)
 #include "node_version.h"  // NODE_MODULE_VERSION
+#include "util.h"
 
 #define NODE_MAKE_VERSION(major, minor, patch)                                \
   ((major) * 0x1000 + (minor) * 0x100 + (patch))
@@ -170,6 +171,17 @@ NODE_EXTERN v8::Local<v8::Value> MakeCallback(
     v8::Local<v8::Function> callback,
     int argc,
     v8::Local<v8::Value>* argv);
+
+class NODE_EXTERN CallbackScope {
+   public:
+    explicit CallbackScope(v8::Isolate* isolate);
+    ~CallbackScope();
+
+   private:
+    v8::Isolate* isolate_;
+
+    DISALLOW_COPY_AND_ASSIGN(CallbackScope);
+};
 
 }  // namespace node
 
